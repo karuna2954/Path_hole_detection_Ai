@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>ROADGUARD AI</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0e0f11;
+            --card: rgba(255, 255, 255, .055);
+            --bd: rgba(255, 255, 255, .1);
+            --tx: #e8eaed;
+            --mu: #8d939c;
+            --ac: #38bdf8;
+            --hi: #ef4444;
+            --md: #f59e0b;
+            --lo: #84cc16;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        :root[data-theme=light] {
+            --bg: #eef0f3;
+            --card: rgba(255, 255, 255, .8);
+            --bd: rgba(0, 0, 0, .12);
+            --tx: #16181c;
+            --mu: #5d636c
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            margin: 0;
+            height: auto
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--tx);
+            font: 15px/1.5 Barlow, system-ui, sans-serif;
+            background-image: radial-gradient(900px 400px at 85% -10%, rgba(56, 189, 248, .1), transparent)
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .num,
+        button,
+        nav a {
+            font-family: 'Barlow Semi Condensed', system-ui, sans-serif
+        }
+
+        h2 {
+            font-size: 26px;
+            margin: 0 0 4px
+        }
+
+        h3 {
+            font-size: 18px;
+            margin: 0 0 10px
+        }
+
+        h4 {
+            margin: 0 0 6px;
+            font-size: 15px
+        }
+
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--bd);
+            position: sticky;
+            top: env(safe-area-inset-top, 0px);
+            background: var(--bg);
+            z-index: 10
+        }
+
+        .brand b {
+            font: 700 24px 'Barlow Semi Condensed';
+            letter-spacing: .5px
+        }
+
+        .brand b i {
+            color: var(--ac);
+            font-style: normal
+        }
+
+        .brand small {
+            display: block;
+            color: var(--mu);
+            font-size: 12px
+        }
+
+        .st {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--mu)
+        }
+
+        .st span:before {
+            content: "";
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            margin-right: 6px
+        }
+
+        nav {
+            display: flex;
+            gap: 2px;
+            flex-wrap: wrap;
+            padding: 8px 24px;
+            border-bottom: 1px solid var(--bd)
+        }
+
+        nav a {
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--mu);
+            font-weight: 600;
+            font-size: 15px
+        }
+
+        nav a.on {
+            background: rgba(56, 189, 248, .14);
+            color: var(--ac)
+        }
+
+        .demo {
+            background: rgba(245, 158, 11, .12);
+            color: var(--md);
+            padding: 6px 24px;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        main {
+            padding: 22px 24px;
+            max-width: 1400px;
+            margin: auto
+        }
+
+        section {
+            display: none
+        }
+
+        section.on {
+            display: block;
+            animation: in .25s
+        }
+
+        @keyframes in {
+            from {
+                opacity: 0;
+                transform: translateY(6px)
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--bd);
+            border-radius: 14px;
+            padding: 16px;
+            backdrop-filter: blur(10px)
+        }
+
+        .g {
+            display: grid;
+            gap: 14px
+        }
+
+        .k5 {
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr))
+        }
+
+        .two {
+            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr)
+        }
+
+        .eq {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
+        }
+
+        @media(max-width:900px) {
+            .two {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .kpi .num {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1
+        }
+
+        .kpi span {
+            color: var(--mu);
+            font-size: 13px
+        }
+
+        button {
+            background: rgba(255, 255, 255, .08);
+            color: var(--tx);
+            border: 1px solid var(--bd);
+            padding: 9px 16px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px
+        }
+
+        button:hover {
+            border-color: var(--ac)
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--ac);
+            outline-offset: 2px
+        }
+
+        button.p {
+            background: var(--ac);
+            color: #04121a;
+            border-color: var(--ac)
+        }
+
+        button.r {
+            background: var(--hi);
+            border-color: var(--hi);
+            color: #fff;
+            font-size: 17px;
+            padding: 12px 22px
+        }
+
+        button:disabled {
+            opacity: .4;
+            cursor: not-allowed
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .stage {
+            position: relative;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 260px
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto
+        }
+
+        video {
+            display: none;
+            width: 100%
+        }
+
+        .scan {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--ac);
+            box-shadow: 0 0 18px var(--ac);
+            top: 0;
+            display: none
+        }
+
+        .scan.go {
+            display: block;
+            animation: sc 1.5s linear infinite
+        }
+
+        @keyframes sc {
+            to {
+                top: 100%
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 99px;
+            font: 600 12px 'Barlow Semi Condensed';
+            letter-spacing: .4px
+        }
+
+        .HIGH {
+            background: rgba(239, 68, 68, .18);
+            color: #f87171
+        }
+
+        .MEDIUM {
+            background: rgba(245, 158, 11, .18);
+            color: #fbbf24
+        }
+
+        .LOW {
+            background: rgba(132, 204, 22, .18);
+            color: #a3e635
+        }
+
+        .tag {
+            background: rgba(56, 189, 248, .14);
+            color: var(--ac)
+        }
+
+        .kv {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 4px 14px;
+            font-size: 14px
+        }
+
+        .kv dt {
+            color: var(--mu)
+        }
+
+        .kv dd {
+            margin: 0;
+            font-weight: 500
+        }
+
+        .mode {
+            cursor: pointer;
+            border: 1px solid var(--bd);
+            border-radius: 12px;
+            padding: 14px;
+            flex: 1;
+            min-width: 220px;
+            background: var(--card)
+        }
+
+        .mode.on {
+            border-color: var(--ac);
+            background: rgba(56, 189, 248, .1)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px
+        }
+
+        th,
+        td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--bd);
+            white-space: nowrap
+        }
+
+        th {
+            color: var(--mu);
+            font-weight: 500
+        }
+
+        tbody tr {
+            cursor: pointer
+        }
+
+        tbody tr:hover {
+            background: rgba(56, 189, 248, .07)
+        }
+
+        .sc2 {
+            overflow-x: auto
+        }
+
+        select,
+        input[type=text] {
+            background: var(--card);
+            color: var(--tx);
+            border: 1px solid var(--bd);
+            border-radius: 8px;
+            padding: 8px
+        }
+
+        .tl {
+            list-style: none;
+            margin: 0;
+            padding: 0
+        }
+
+        .tl li {
+            display: flex;
+            gap: 12px;
+            padding: 8px 0;
+            opacity: .4;
+            position: relative
+        }
+
+        .tl li.d {
+            opacity: 1
+        }
+
+        .tl li.c .ic {
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, .35)
+        }
+
+        .ic {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .08);
+            display: grid;
+            place-items: center;
+            flex: none
+        }
+
+        .tl li.d .ic {
+            background: var(--ac)
+        }
+
+        .note {
+            border-left: 3px solid var(--ac);
+            background: rgba(56, 189, 248, .08);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px
+        }
+
+        .note small {
+            color: var(--mu)
+        }
+
+        .pipe {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center
+        }
+
+        .node {
+            padding: 10px 14px;
+            border: 1px solid var(--bd);
+            border-radius: 10px;
+            background: var(--card);
+            font-weight: 600;
+            transition: .3s
+        }
+
+        .node.on {
+            border-color: var(--ac);
+            background: rgba(56, 189, 248, .18);
+            transform: translateY(-3px)
+        }
+
+        .arr {
+            width: 26px;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, var(--ac) 0 5px, transparent 5px 9px);
+            animation: fl 1s linear infinite;
+            background-size: 9px 2px
+        }
+
+        @keyframes fl {
+            to {
+                background-position: 9px 0
+            }
+        }
+
+        .clear {
+            color: #4ade80;
+            font: 700 28px 'Barlow Semi Condensed'
+        }
+
+        .ex {
+            border-left: 3px solid var(--ac);
+            padding-left: 10px;
+            color: var(--mu);
+            font-size: 14px
+        }
+
+        #toasts {
+            position: fixed;
+            right: 16px;
+            bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            display: grid;
+            gap: 8px;
+            z-index: 50
+        }
+
+        .toast {
+            background: #1c2127;
+            color: #e8eaed;
+            border: 1px solid var(--ac);
+            padding: 10px 14px;
+            border-radius: 10px;
+            animation: in .2s
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            display: none;
+            place-items: center;
+            z-index: 40;
+            padding: 16px
+        }
+
+        .modal.on {
+            display: grid
+        }
+
+        .modal .card {
+            max-width: 560px;
+            width: 100%;
+            background: #171a1e;
+            max-height: 90vh;
+            overflow: auto
+        }
+
+        svg text {
+            font-family: 'Barlow Semi Condensed', sans-serif
+        }
+
+        .legend i {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin: 0 4px 0 12px
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                animation: none !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="brand"><b>ROAD<i>GUARD</i> AI</b><small>AI-Powered Pothole Detection &amp; Automated Road
+                Intelligence</small></div>
+        <div class="st"><span>AI SYSTEM: ONLINE</span><span>Camera: READY</span><span>GPS: ACTIVE
+                (DEMO)</span><span>Notification: ENABLED</span></div>
+    </header>
+    <div class="demo"><span><b>WEBINAR DEMO MODE</b> — GPS, government API, complaint status and notifications are DEMO
+            / SIMULATED. No real authority is contacted.</span><label><input type="checkbox" id="demoT" checked> Demo
+            mode on</label></div>
+    <nav id="nav"></nav>
+    <main>
+        <section id="dashboard" class="on">
+            <div class="g k5" id="kpis"></div>
+            <div class="g two" style="margin-top:14px">
+                <div class="card">
+                    <h3>Live road intelligence <span class="badge tag">DEMO SAMPLE FRAME</span></h3>
+                    <div class="stage"><canvas id="cvD" width="800" height="480"></canvas>
+                        <div class="scan go"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Latest detection</h3>
+                    <div id="dashInfo"></div>
+                    <div class="row" style="margin-top:12px"><button class="p" onclick="go('detect')">Open AI Detection
+                            Studio</button></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="detect">
+            <h2>AI Detection Studio</h2>
+            <div class="row" style="margin:10px 0">
+                <div class="mode on" id="m1" onclick="setMode(1)">
+                    <h4>Mode 1 — Upload image</h4><span style="color:var(--mu)">Analyze a road photo</span>
+                </div>
+                <div class="mode" id="m2" onclick="setMode(2)">
+                    <h4>Mode 2 — Live camera</h4><span style="color:var(--mu)">Capture and analyze a frame</span>
+                </div>
+            </div>
+            <div class="card" style="margin-bottom:14px;border-color:rgba(245,158,11,.5)"><b
+                    style="color:var(--md)">DEMO AI MODE — Pothole model not loaded.</b> <span style="color:var(--mu)">A
+                    browser page cannot run <code>models/best.pt</code> directly. Until a pothole-trained YOLO model is
+                    served (e.g. exported to ONNX / a backend API), this app uses a simple dark-region heuristic on the
+                    image. It is not a trained detector and can miss potholes or flag shadows. Size and depth are
+                    uncalibrated estimates.</span></div>
+            <div class="g two">
+                <div class="card">
+                    <div class="row" id="c1"><button class="p" onclick="$('#file').click()">UPLOAD ROAD
+                            IMAGE</button><input type="file" id="file" accept="image/*" hidden><button
+                            onclick="sample('A')">Sample: 2 potholes</button><button onclick="sample('B')">Sample: clear
+                            road</button></div>
+                    <div class="row" id="c2" style="display:none"><button class="p" id="bStart"
+                            onclick="camStart()">START CAMERA</button><button onclick="camStop()">STOP
+                            CAMERA</button><button onclick="camCap()">CAPTURE FRAME</button></div>
+                    <div class="row" style="margin:10px 0"><span>CAMERA STATUS: <b id="camSt">READY</b></span><label
+                            style="margin-left:auto">Confidence threshold <input type="range" id="thr" min="40" max="95"
+                                value="60"> <b id="thrV">60%</b></label><button onclick="resetDet()">Reset
+                            detection</button></div>
+                    <div class="stage" id="stage"><video id="vid" playsinline muted></video><canvas id="cv" width="800"
+                            height="480"></canvas>
+                        <div class="scan" id="scan"></div>
+                    </div>
+                    <div id="results" style="margin-top:12px"></div>
+                </div>
+                <div class="g" style="align-content:start">
+                    <div class="card">
+                        <h3>AI road analysis</h3>
+                        <div id="analysis" style="color:var(--mu)">Load an image, a sample, or capture a frame to begin.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Detection location <span class="badge tag">DEMO GPS</span></h3>
+                        <dl class="kv" id="loc"></dl>
+                    </div>
+                    <div class="card"><button class="r" id="raise" disabled onclick="raise()">RAISE ROAD
+                            COMPLAINT</button>
+                        <div id="raised" style="margin-top:10px"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reports">
+            <h2>Road Reports</h2>
+            <p style="color:var(--mu)">Detections from this session and seeded demo data (DEMO / SIMULATED).</p>
+            <div class="g eq" id="repCards"></div>
+        </section>
+
+        <section id="center">
+            <h2>Complaint Center</h2>
+            <div class="row" style="margin:10px 0"><select id="fS">
+                    <option value="">All severities</option>
+                    <option>HIGH</option>
+                    <option>MEDIUM</option>
+                    <option>LOW</option>
+                </select><select id="fT">
+                    <option value="">All statuses</option>
+                </select><input type="text" id="fQ" placeholder="Search ID or road"><span class="badge tag">DEMO /
+                    SIMULATED</span></div>
+            <div class="g two">
+                <div class="card sc2">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Complaint ID</th>
+                                <th>Detected</th>
+                                <th>Location</th>
+                                <th>Severity</th>
+                                <th>AI conf.</th>
+                                <th>Authority</th>
+                                <th>Status</th>
+                                <th>Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb"></tbody>
+                    </table>
+                </div>
+                <div class="g" style="align-content:start">
+                    <div class="card">
+                        <h3>Notifications</h3>
+                        <div class="notes"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="map">
+            <h2>Road Map <span class="badge tag">DEMO ROAD MAP</span></h2>
+            <p style="color:var(--mu)">Schematic only. Roads and coordinates are fictional, not real road boundaries.
+            </p>
+            <div class="g two">
+                <div class="card"><svg id="mapSvg" viewBox="0 0 800 480" width="100%"></svg>
+                    <div class="legend"><i style="background:var(--hi)"></i>High<i
+                            style="background:var(--md)"></i>Medium<i style="background:var(--lo)"></i>Low / resolved
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Marker details</h3>
+                    <div id="mapInfo" style="color:var(--mu)">Select a marker.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="analytics">
+            <h2>Analytics <span class="badge tag">DEMO / SIMULATED</span></h2>
+            <div class="g k5" id="today" style="margin:10px 0"></div>
+            <div class="g eq">
+                <div class="card">
+                    <h3>Potholes detected per day</h3>
+                    <div id="a1"></div>
+                </div>
+                <div class="card">
+                    <h3>Severity split</h3>
+                    <div id="a2"></div>
+                </div>
+                <div class="card">
+                    <h3>Complaints submitted vs resolved</h3>
+                    <div id="a3"></div>
+                </div>
+                <div class="card">
+                    <h3>AI confidence distribution</h3>
+                    <div id="a4"></div>
+                </div>
+                <div class="card">
+                    <h3>Road condition trend (% good road)</h3>
+                    <div id="a5"></div>
+                </div>
+                <div class="card">
+                    <h3>Average resolution time</h3>
+                    <div class="num" style="font:700 44px 'Barlow Semi Condensed'">4.6 days</div><span
+                        style="color:var(--mu)">Down from 6.1 days last month (simulated)</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="arch">
+            <h2>System Architecture</h2>
+            <div class="card" style="margin:10px 0">
+                <div class="pipe" id="pipe"></div>
+            </div>
+            <h3>How ROADGUARD AI works in the real world</h3>
+            <div class="g eq">
+                <div class="card">
+                    <h4>Helmet camera</h4>
+                    <p>A rider mounts a camera on the helmet. It captures road frames continuously, the AI detects
+                        potholes, GPS records the location, a complaint is generated and the rider gets status updates.
+                    </p>
+                </div>
+                <div class="card">
+                    <h4>Vehicle camera</h4>
+                    <p>The forward-facing camera already in the vehicle is analyzed while driving. Each detection flows:
+                        AI detection → GPS → complaint → authority → repair → notification.</p>
+                </div>
+                <div class="card">
+                    <h3>RoadGuard Vision Engine</h3>
+                    <dl class="kv">
+                        <dt>Model</dt>
+                        <dd>YOLO-based object detection</dd>
+                        <dt>Task</dt>
+                        <dd>Pothole detection</dd>
+                        <dt>Input</dt>
+                        <dd>Road images / camera frames</dd>
+                        <dt>Output</dt>
+                        <dd>Bounding boxes</dd>
+                        <dt>Confidence</dt>
+                        <dd>0–100%</dd>
+                        <dt>Severity</dt>
+                        <dd>LOW / MEDIUM / HIGH</dd>
+                        <dt>Processing</dt>
+                        <dd>Real-time / near real-time</dd>
+                        <dt>This demo</dt>
+                        <dd><b style="color:var(--md)">Pothole model not loaded</b> (expects models/best.pt)</dd>
+                    </dl>
+                    <p class="ex" style="margin-top:10px">Input image → YOLO detection → bounding box → severity
+                        classification</p>
+                </div>
+            </div>
+            <p class="ex" style="margin-top:14px">Production deployment would require vehicle-camera integration, GPS
+                permissions, secure government APIs and appropriate road-safety validation.</p>
+        </section>
+    </main>
+    <div class="modal" id="modal">
+        <div class="card" id="mbody"></div>
+    </div>
+    <div id="toasts"></div>
+
+    <script>
+        const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+        const STAGES = [["DETECTED", "📷"], ["COMPLAINT SUBMITTED", "📨"], ["UNDER REVIEW", "🔍"], ["ASSIGNED TO AUTHORITY", "🏛"], ["REPAIR TEAM DISPATCHED", "🚚"], ["ROAD REPAIR IN PROGRESS", "🛠"], ["RESOLVED", "✓"]];
+        const STT = ["DETECTED", "SUBMITTED", "UNDER REVIEW", "ASSIGNED", "DISPATCHED", "REPAIR IN PROGRESS", "RESOLVED"];
+        const VIEWS = [["dashboard", "Dashboard"], ["detect", "AI Detection"], ["reports", "Road Reports"], ["center", "Complaint Center"], ["map", "Road Map"], ["analytics", "Analytics"], ["arch", "System Architecture"]];
+        let C = [[126, "MEDIUM", 91.2, 5, "Adyar, Chennai", [160, 300]], [125, "LOW", 87.6, 6, "T. Nagar, Chennai", [560, 120]], [124, "HIGH", 94.1, 3, "Velachery, Chennai", [330, 380]], [123, "MEDIUM", 89.3, 4, "Anna Nagar, Chennai", [240, 110]], [122, "HIGH", 95.0, 2, "Guindy, Chennai", [470, 260]], [121, "LOW", 85.2, 6, "Mylapore, Chennai", [650, 330]]].map((r, i) => ({ id: "RG-2026-00" + r[0], sev: r[1], conf: r[2], stage: r[3], loc: r[4], xy: r[5], time: "05 Oct 2026, " + (9 + i) + ":1" + i + " AM", upd: "06 Oct 2026, 08:3" + i + " AM", demo: 1, gps: [13.05 + i * .01, 80.21 + i * .008].map(v => v.toFixed(4)).join(", "), times: [] }));
+        let nextId = 127, cur = { dets: [], src: null, complaint: null }, notes = [], mode = 1, stream = null;
+        function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; $('#toasts').append(d); setTimeout(() => d.remove(), 3200) }
+        function go(v) { $$('section').forEach(s => s.classList.toggle('on', s.id === v)); $$('nav a').forEach(a => a.classList.toggle('on', a.dataset.v === v)); if (v === 'map') drawMap(); if (v === 'analytics') drawAn(); if (v === 'arch') pipe(); if (v === 'center') table(); if (v === 'reports') reps(); if (v === 'dashboard') kpis() }
+        $('#nav').innerHTML = VIEWS.map(v => `<a tabindex=0 data-v="${v[0]}" class="${v[0] === 'dashboard' ? 'on' : ''}" onclick="go('${v[0]}')">${v[1]}</a>`).join('');
+        const now = () => new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', ',');
+        const tm = () => new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        // ---- KPIs
+        function kpis() {
+            const open = C.length; const k = [["127", "Total potholes detected"], ["12", "High priority"], [31 + C.filter(c => !c.demo).length, "Complaints submitted"], ["63", "Road issues resolved"], ["21", "Under repair"]];
+            $('#kpis').innerHTML = k.map(x => `<div class="card kpi"><div class="num">${x[0]}</div><span>${x[1]}</span></div>`).join('')
+        }
+        // ---- sample scene
+        function sample(t) {
+            const c = $('#cv'); c.width = 800; c.height = 480; const x = c.getContext('2d'); let s = t === 'A' ? 7 : 3; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+            let g = x.createLinearGradient(0, 0, 0, 170); g.addColorStop(0, '#7c8fa3'); g.addColorStop(1, '#b4bcc4'); x.fillStyle = g; x.fillRect(0, 0, 800, 170);
+            x.fillStyle = '#5b5f65'; x.fillRect(0, 170, 800, 310);
+            for (let i = 0; i < 2500; i++) { const v = 70 + r() * 40 | 0; x.fillStyle = `rgb(${v},${v + 2},${v + 5})`; x.fillRect(r() * 800, 170 + r() * 310, 2 + r() * 3, 2 + r() * 3) }
+            x.fillStyle = '#d8d4c0'; for (let i = 0; i < 5; i++) { const y = 190 + i * i * 14 + i * 20, w = 6 + i * 5; x.fillRect(400 - w / 2, y, w, 10 + i * 9) }
+            x.fillStyle = '#8a8f55'; x.fillRect(0, 170, 60, 310); x.fillStyle = '#8a8f55'; x.fillRect(740, 170, 60, 310);
+            if (t === 'A') { [[250, 360, 95, 52], [560, 290, 58, 30]].forEach(p => { x.fillStyle = '#8b8f94'; x.beginPath(); x.ellipse(p[0], p[1], p[2] + 7, p[3] + 5, 0, 0, 7); x.fill(); x.fillStyle = '#17181a'; x.beginPath(); x.ellipse(p[0], p[1], p[2], p[3], 0, 0, 7); x.fill() }) }
+            loadCanvas(null, 'Sample road (' + (t === 'A' ? '2 potholes' : 'clear') + ') — generated demo image')
+        }
+        // ---- detection heuristic (NOT a trained model)
+        function detect(src) {
+            const W = 96, H = 60, t = document.createElement('canvas'); t.width = W; t.height = H; const x = t.getContext('2d'); x.drawImage(src, 0, 0, W, H); const d = x.getImageData(0, 0, W, H).data;
+            const L = new Float32Array(W * H); for (let i = 0; i < W * H; i++)L[i] = .3 * d[i * 4] + .59 * d[i * 4 + 1] + .11 * d[i * 4 + 2];
+            const y0 = Math.floor(H * .38); let sum = 0, n = 0; for (let y = y0; y < H; y++)for (let xx = 6; xx < W - 6; xx++) { sum += L[y * W + xx]; n++ } const m = sum / n;
+            const mask = new Uint8Array(W * H); for (let y = y0; y < H; y++)for (let xx = 6; xx < W - 6; xx++) { const v = L[y * W + xx]; if (v < m * .6 && v < m - 22) mask[y * W + xx] = 1 }
+            const seen = new Uint8Array(W * H), out = [];
+            for (let i = 0; i < W * H; i++) {
+                if (!mask[i] || seen[i]) continue; const st = [i]; seen[i] = 1; let a = 0, x1 = W, x2 = 0, y1 = H, y2 = 0, ls = 0;
+                while (st.length) {
+                    const p = st.pop(), px = p % W, py = p / W | 0; a++; ls += L[p]; x1 = Math.min(x1, px); x2 = Math.max(x2, px); y1 = Math.min(y1, py); y2 = Math.max(y2, py);
+                    [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(o => { const nx = px + o[0], ny = py + o[1]; if (nx < 0 || ny < 0 || nx >= W || ny >= H) return; const q = ny * W + nx; if (mask[q] && !seen[q]) { seen[q] = 1; st.push(q) } })
+                }
+                const bw = x2 - x1 + 1, bh = y2 - y1 + 1, ratio = a / (n), fill = a / (bw * bh), asp = bw / bh;
+                if (ratio < .004 || ratio > .3 || fill < .45 || asp < .5 || asp > 4.5) continue;
+                const contrast = (m - ls / a) / m, conf = Math.min(94, 50 + contrast * 55 + fill * 18 + Math.min(ratio * 200, 6));
+                const sev = ratio > .05 ? 'HIGH' : ratio > .018 ? 'MEDIUM' : 'LOW';
+                out.push({ x: x1 / W, y: y1 / H, w: bw / W, h: bh / H, conf: +conf.toFixed(1), sev, size: +(ratio * 14).toFixed(1), depth: sev === 'HIGH' ? '8–12 cm' : sev === 'MEDIUM' ? '4–8 cm' : '2–4 cm' })
+            }
+            return out.sort((a, b) => b.conf - a.conf).slice(0, 5)
+        }
+        const COL = { HIGH: '#ef4444', MEDIUM: '#f59e0b', LOW: '#84cc16' };
+        function drawDets(c, dets, scale) {
+            const x = c.getContext('2d'); dets.forEach((p, i) => {
+                const col = COL[p.sev], X = p.x * c.width, Y = p.y * c.height, w = p.w * c.width, h = p.h * c.height;
+                x.lineWidth = 3; x.strokeStyle = col; x.strokeRect(X, Y, w, h); x.beginPath(); x.ellipse(X + w / 2, Y + h / 2, w * .68, h * .68, 0, 0, 7); x.lineWidth = 3; x.setLineDash([10, 6]); x.stroke(); x.setLineDash([]);
+                x.beginPath(); x.arc(X + w / 2, Y + h / 2, 4, 0, 7); x.fillStyle = col; x.fill();
+                const lb = `POTHOLE #${i + 1}  ${p.conf}%  ${p.sev}`; x.font = '600 15px sans-serif'; const tw = x.measureText(lb).width + 14; const ly = Y > 26 ? Y - 24 : Y + h + 2; x.fillStyle = col; x.fillRect(X, ly, tw, 22); x.fillStyle = '#fff'; x.fillText(lb, X + 7, ly + 16)
+            })
+        }
+        // ---- load + analyze
+        function loadCanvas(img, label) {
+            cur.src = label; cur.dets = []; if (img) { const c = $('#cv'); const r = Math.min(1, 1000 / img.width); c.width = img.width * r; c.height = img.height * r; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height) }
+            cur.base = document.createElement('canvas'); cur.base.width = $('#cv').width; cur.base.height = $('#cv').height; cur.base.getContext('2d').drawImage($('#cv'), 0, 0); analyze()
+        }
+        function analyze() {
+            if (!cur.base) return; $('#camSt').textContent = 'ANALYZING'; $('#scan').classList.add('go'); $('#analysis').innerHTML = '<span class="badge tag">SCANNING…</span>'; $('#raise').disabled = true;
+            const c = $('#cv'); c.getContext('2d').drawImage(cur.base, 0, 0);
+            setTimeout(() => { cur.all = detect(cur.base); render(); $('#scan').classList.remove('go'); $('#camSt').textContent = stream ? 'SCANNING' : 'READY'; toast(cur.all.length ? `Analysis complete: ${cur.all.length} candidate(s)` : 'Analysis complete: road clear') }, 1600)
+        }
+        function render() {
+            const thr = +$('#thr').value; cur.dets = (cur.all || []).filter(d => d.conf >= thr); const c = $('#cv'); c.getContext('2d').drawImage(cur.base, 0, 0); drawDets(c, cur.dets);
+            const R = $('#results'), A = $('#analysis'); cur.gps = [(13.0827 + (Math.random() - .5) * .004).toFixed(4), (80.2707 + (Math.random() - .5) * .004).toFixed(4)]; cur.ts = now();
+            $('#loc').innerHTML = `<dt>Latitude</dt><dd>${cur.gps[0]}</dd><dt>Longitude</dt><dd>${cur.gps[1]}</dd><dt>Location</dt><dd>Chennai, Tamil Nadu</dd><dt>Road</dt><dd>Demo Road (simulated)</dd><dt>Timestamp</dt><dd>${cur.ts}</dd>`;
+            if (!cur.dets.length) { R.innerHTML = '<div class="clear">✓ ROAD CLEAR</div><div style="color:var(--mu)">No pothole detected at the current threshold.</div>'; A.innerHTML = '<b style="color:#4ade80">ROAD CLEAR</b><p style="color:var(--mu)">No surface depression met the detection criteria.</p>'; $('#raise').disabled = true; return }
+            R.innerHTML = `<h3>AI ANALYSIS COMPLETE — Potholes detected: ${cur.dets.length}</h3>` + cur.dets.map((d, i) => `<div class="row" style="padding:4px 0"><b>Pothole #${i + 1}</b><span>Confidence: ${d.conf}%</span><span class="badge ${d.sev}">${d.sev}</span></div>`).join('');
+            const t = cur.dets[0]; const ris = t.sev; A.innerHTML = `<dl class="kv"><dt>Detection status</dt><dd><span class="badge ${t.sev}">POTHOLE DETECTED</span></dd><dt>Confidence</dt><dd>${t.conf}% <small style="color:var(--mu)">(heuristic score)</small></dd><dt>Severity</dt><dd><span class="badge ${t.sev}">${t.sev}</span></dd><dt>Estimated size</dt><dd>${t.size} m² <small style="color:var(--mu)">(uncalibrated)</small></dd><dt>Estimated depth</dt><dd>${t.depth}</dd><dt>Road condition</dt><dd>${t.sev === 'LOW' ? 'FAIR' : 'POOR'}</dd><dt>Risk level</dt><dd>${ris}</dd><dt>Recommended action</dt><dd>${t.sev === 'HIGH' ? 'IMMEDIATE ROAD REPAIR' : t.sev === 'MEDIUM' ? 'SCHEDULE REPAIR' : 'MONITOR'}</dd></dl><p class="ex" style="margin-top:10px"><b>AI explanation:</b> a dark surface region with compact shape was found at this location. Its relative area suggests a ${t.sev.toLowerCase()}-priority hazard. Demo heuristic: verify on site.</p>`;
+            $('#raise').disabled = false; $('#raised').innerHTML = ''; cur.complaint = null;
+            if (cur.dets.length) setDash(t)
+        }
+        function setDash(t) { $('#dashInfo').innerHTML = `<dl class="kv"><dt>Status</dt><dd><span class="badge ${t.sev}">POTHOLE DETECTED</span></dd><dt>Confidence</dt><dd>${t.conf}%</dd><dt>Severity</dt><dd>${t.sev}</dd><dt>Size</dt><dd>${t.size} m²</dd><dt>Depth</dt><dd>${t.depth}</dd><dt>GPS (DEMO)</dt><dd>${cur.gps ? cur.gps.join('° N, ') + '° E' : '13.0827° N, 80.2707° E'}</dd><dt>Time</dt><dd>${tm()}</dd></dl>` }
+        $('#thr').oninput = e => { $('#thrV').textContent = e.target.value + '%'; if (cur.all) render() };
+        $('#file').onchange = e => { const f = e.target.files[0]; if (!f) return; const img = new Image(); img.onload = () => { loadCanvas(img, f.name); toast('Image loaded') }; img.src = URL.createObjectURL(f) };
+        function resetDet() { cur = { dets: [], src: null, complaint: null }; $('#results').innerHTML = ''; $('#analysis').textContent = 'Load an image, a sample, or capture a frame to begin.'; $('#raise').disabled = true; $('#raised').innerHTML = ''; const c = $('#cv'); c.getContext('2d').clearRect(0, 0, c.width, c.height); $('#loc').innerHTML = ''; toast('Detection reset') }
+        // ---- modes + camera
+        function setMode(m) { mode = m; $('#m1').classList.toggle('on', m == 1); $('#m2').classList.toggle('on', m == 2); $('#c1').style.display = m == 1 ? 'flex' : 'none'; $('#c2').style.display = m == 2 ? 'flex' : 'none'; if (m == 1) camStop(true) }
+        async function camStart() { try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); const v = $('#vid'); v.srcObject = stream; await v.play(); v.style.display = 'block'; $('#cv').style.display = 'none'; $('#camSt').textContent = 'SCANNING'; toast('Camera started') } catch (e) { stream = null; toast('Camera unavailable here. Use Upload mode or a sample frame.') } }
+        function camStop(q) { if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null } $('#vid').style.display = 'none'; $('#cv').style.display = 'block'; $('#camSt').textContent = 'READY'; if (!q) toast('Camera stopped') }
+        function camCap() { const v = $('#vid'); if (!stream || !v.videoWidth) { toast('Start the camera first, or load a sample frame'); return } const c = $('#cv'); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0); v.style.display = 'none'; c.style.display = 'block'; loadCanvas(null, 'Captured frame'); toast('Frame captured; this is a single-frame analysis, not continuous detection') }
+        // ---- complaints
+        function raise() {
+            if (!cur.dets.length) return; const t = cur.dets[0]; const id = "RG-2026-00" + nextId++; const th = document.createElement('canvas'); th.width = 240; th.height = 150; th.getContext('2d').drawImage($('#cv'), 0, 0, 240, 150);
+            const c = { id, sev: t.sev, conf: t.conf, stage: 2, loc: 'Chennai, Tamil Nadu', gps: cur.gps.join(', '), time: cur.ts, upd: now(), xy: [120 + Math.random() * 560 | 0, 90 + Math.random() * 320 | 0], img: th.toDataURL(), times: [tm(), tm(), tm()], demo: 0, size: t.size }; C.unshift(c); cur.complaint = c;
+            $('#raised').innerHTML = `<div class="badge LOW" style="margin-bottom:8px">✓ COMPLAINT SUCCESSFULLY GENERATED (DEMO / SIMULATED)</div><dl class="kv"><dt>Complaint ID</dt><dd>${id}</dd><dt>Issue</dt><dd>Pothole</dd><dt>Severity</dt><dd>${t.sev}</dd><dt>Location</dt><dd>Chennai, Tamil Nadu</dd><dt>GPS</dt><dd>${c.gps}</dd><dt>Detected</dt><dd>${c.time}</dd><dt>Department</dt><dd>Municipal Road Maintenance Department</dd><dt>Attached</dt><dd>Image, AI result, GPS, severity, timestamp</dd></dl><img src="${c.img}" style="width:100%;border-radius:8px;margin-top:8px" alt="Attached detection"><div class="row" style="margin-top:10px"><button class="p" onclick="openC('${id}')">View complaint</button><button onclick="go('center')">Complaint Center</button></div>`;
+            notes.unshift({ t: '🔔 ROADGUARD AI', m: `Your pothole complaint has been received. Complaint ID: ${id}`, s: 'UNDER REVIEW', e: 'Estimated response: 24–48 hours', tm: tm() }); renderNotes(); toast('Complaint ' + id + ' generated'); $('#raise').disabled = true
+        }
+        function renderNotes() { $$('.notes').forEach(n => n.innerHTML = notes.length ? notes.map(x => `<div class="note"><b>${x.t}</b><br>${x.m}<br>Status: <b>${x.s}</b>${x.e ? '<br><small>' + x.e + '</small>' : ''}<br><small>${x.tm} · DEMO / SIMULATED</small></div>`).join('') : '<span style="color:var(--mu)">No notifications yet. Raise a complaint to see updates.</span>') }
+        function table() {
+            const fs = $('#fS').value, ft = $('#fT').value, q = $('#fQ').value.toLowerCase(); if ($('#fT').options.length < 2) STT.forEach(s => $('#fT').add(new Option(s, s)));
+            $('#tb').innerHTML = C.filter(c => (!fs || c.sev === fs) && (!ft || STT[c.stage] === ft) && (!q || (c.id + c.loc).toLowerCase().includes(q))).map(c => `<tr onclick="openC('${c.id}')"><td>${c.id}</td><td>${c.time}</td><td>${c.loc.split(',')[0]}</td><td><span class="badge ${c.sev}">${c.sev}</span></td><td>${c.conf}%</td><td>Municipal Roads</td><td>${STT[c.stage]}</td><td>${c.upd}</td></tr>`).join(''); renderNotes()
+        }
+        ['fS', 'fT', 'fQ'].forEach(i => $('#' + i).oninput = table);
+        function openC(id) {
+            const c = C.find(x => x.id === id); $('#mbody').innerHTML = `<div class="row" style="justify-content:space-between"><h3>${c.id}</h3><button onclick="closeM()">Close</button></div><span class="badge ${c.sev}">${c.sev}</span> <span class="badge tag">DEMO / SIMULATED</span>
+<dl class="kv" style="margin:10px 0"><dt>Location</dt><dd>${c.loc}</dd><dt>GPS</dt><dd>${c.gps}</dd><dt>Detected</dt><dd>${c.time}</dd><dt>AI confidence</dt><dd>${c.conf}%</dd><dt>Authority</dt><dd>Municipal Road Maintenance Department</dd></dl>${c.img ? `<img src="${c.img}" style="width:100%;border-radius:8px" alt="Detection">` : ''}
+<ul class="tl" style="margin-top:10px">${STAGES.map((s, i) => `<li class="${i <= c.stage ? 'd' : ''} ${i === c.stage ? 'c' : ''}"><div class="ic">${s[1]}</div><div><b>${s[0]}</b><br><small style="color:var(--mu)">${i <= c.stage ? (c.times[i] || 'earlier (seeded)') : 'pending'}</small></div></li>`).join('')}</ul>
+${c.stage === 6 ? '<div class="clear">✓ ROAD ISSUE RESOLVED</div>' : `<button class="p" onclick="adv('${c.id}')">SIMULATE STATUS UPDATE</button>`}`; $('#modal').classList.add('on')
+        }
+        function closeM() { $('#modal').classList.remove('on'); table(); drawMap() } $('#modal').onclick = e => { if (e.target.id === 'modal') closeM() };
+        function adv(id) {
+            const c = C.find(x => x.id === id); if (c.stage >= 6) return; c.stage++; c.times[c.stage] = tm(); c.upd = now(); const msgs = ['', '', 'Your complaint is under review.', 'Your pothole complaint has been assigned to the municipal road maintenance team.', 'A repair team has been dispatched to the location.', 'Road repair is now in progress.', 'Your reported pothole has been repaired. ✓ ROAD ISSUE RESOLVED'];
+            notes.unshift({ t: c.stage === 6 ? '🔔 RESOLVED' : '🔔 UPDATE', m: msgs[c.stage] + ' (' + c.id + ')', s: STT[c.stage], tm: tm() }); renderNotes(); toast('Status: ' + STT[c.stage]); openC(id)
+        }
+        function reps() { $('#repCards').innerHTML = C.map(c => `<div class="card" style="cursor:pointer" onclick="openC('${c.id}')"><div class="row" style="justify-content:space-between"><b>${c.id}</b><span class="badge ${c.sev}">${c.sev}</span></div>${c.img ? `<img src="${c.img}" style="width:100%;border-radius:8px;margin:8px 0" alt="">` : ''}<div style="color:var(--mu)">${c.loc} · ${c.conf}% · ${STT[c.stage]}</div></div>`).join('') }
+        // ---- map
+        function drawMap() {
+            const s = $('#mapSvg'); const ln = (a) => `<path d="${a}" stroke="#3a3f46" stroke-width="22" fill="none" stroke-linecap="round"/><path d="${a}" stroke="#555b63" stroke-width="2" stroke-dasharray="10 8" fill="none"/>`;
+            s.innerHTML = `<rect width="800" height="480" fill="#14171a" rx="10"/>` + ln('M40 120 H760') + ln('M60 300 H740') + ln('M150 30 V450') + ln('M400 30 V450') + ln('M660 30 V450') + ln('M40 420 L400 300 L760 120') + `<text x="14" y="466" fill="#8d939c" font-size="13">DEMO ROAD MAP · fictional layout</text>` + C.map(c => `<g style="cursor:pointer" onclick="mk('${c.id}')"><circle cx="${c.xy[0]}" cy="${c.xy[1]}" r="11" fill="${c.stage === 6 ? COL.LOW : COL[c.sev]}" stroke="#fff" stroke-width="2"/></g>`).join('')
+        }
+        function mk(id) { const c = C.find(x => x.id === id); $('#mapInfo').innerHTML = `<dl class="kv"><dt>Pothole ID</dt><dd>${c.id.replace('RG', 'PH')}</dd><dt>Severity</dt><dd><span class="badge ${c.sev}">${c.sev}</span></dd><dt>Confidence</dt><dd>${c.conf}%</dd><dt>Location</dt><dd>${c.loc}</dd><dt>Complaint status</dt><dd>${STT[c.stage]}</dd><dt>Detected</dt><dd>${c.time}</dd></dl><button onclick="openC('${c.id}')" style="margin-top:10px">Open complaint</button>` }
+        // ---- analytics
+        function bars(el, l, v, col, stack) {
+            const m = Math.max(...v.flat ? v.flat() : v) || 1, w = 380, h = 170; let s = `<svg viewBox="0 0 ${w} ${h + 24}" width="100%">`; const bw = w / l.length;
+            l.forEach((t, i) => { const val = v[i], bh = val / m * h; s += `<rect x="${i * bw + 8}" y="${h - bh}" width="${bw - 16}" height="${bh}" rx="4" fill="${Array.isArray(col) ? col[i] : col}"><title>${t}: ${val}</title></rect><text x="${i * bw + bw / 2}" y="${h + 16}" fill="#8d939c" font-size="12" text-anchor="middle">${t}</text><text x="${i * bw + bw / 2}" y="${h - bh - 4}" fill="#e8eaed" font-size="12" text-anchor="middle">${val}</text>` }); $(el).innerHTML = s + '</svg>'
+        }
+        function drawAn() {
+            $('#today').innerHTML = [["18", "Detected today"], ["4", "High"], ["9", "Medium"], ["5", "Low"], ["15", "Complaints"], ["7", "Resolved"]].map(x => `<div class="card kpi"><div class="num">${x[0]}</div><span>${x[1]}</span></div>`).join('');
+            bars('#a1', ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], [14, 19, 11, 22, 17, 9, 18], '#38bdf8'); bars('#a2', ['High', 'Medium', 'Low'], [12, 58, 57], [COL.HIGH, COL.MEDIUM, COL.LOW]);
+            bars('#a3', ['Wk1', 'Wk2', 'Wk3', 'Wk4'], [22, 31, 27, 31], '#38bdf8'); bars('#a4', ['<70', '70–80', '80–90', '90–95', '95+'], [3, 12, 38, 51, 23], '#a78bfa');
+            const pts = [62, 64, 63, 67, 70, 72, 75]; $('#a5').innerHTML = `<svg viewBox="0 0 380 190" width="100%"><polyline fill="none" stroke="#38bdf8" stroke-width="3" points="${pts.map((p, i) => `${20 + i * 56},${170 - (p - 55) * 7}`).join(' ')}"/>${pts.map((p, i) => `<circle cx="${20 + i * 56}" cy="${170 - (p - 55) * 7}" r="4" fill="#38bdf8"><title>${p}%</title></circle>`).join('')}</svg>`
+        }
+        // ---- pipeline
+        let pi = 0; function pipe() {
+            const n = ["Camera", "Image frame", "AI computer vision", "Pothole detection", "Severity analysis", "GPS location", "Automatic complaint", "Government authority (simulated)", "Road repair", "User notification"];
+            $('#pipe').innerHTML = n.map((x, i) => `<div class="node" data-i="${i}">${x}</div>${i < n.length - 1 ? '<div class="arr"></div>' : ''}`).join('')
+        }
+        setInterval(() => { const a = $$('.node'); a.forEach((x, i) => x.classList.toggle('on', i === pi % a.length)); pi++ }, 700);
+        // ---- dashboard live preview (auto-detects generated sample)
+        function initDash() { const c = $('#cvD'), x = c.getContext('2d'); const t = $('#cv'); sample('A'); const b = cur.base; x.drawImage(b, 0, 0, 800, 480); const d = detect(b); cur.all = d; cur.dets = d; cur.gps = ['13.0827', '80.2707']; drawDets(c, d, 1); if (d[0]) setDash(d[0]); cur = { dets: [], src: null, complaint: null }; $('#scan').classList.remove('go'); $('#analysis').textContent = 'Load an image, a sample, or capture a frame to begin.'; $('#results').innerHTML = ''; $('#loc').innerHTML = ''; $('#camSt').textContent = 'READY' }
+        kpis(); renderNotes(); pipe();
+        setTimeout(() => { const c = $('#cv'); c.getContext('2d').fillStyle = '#111'; c.getContext('2d').fillRect(0, 0, 800, 480); const k = $('#cv').getContext('2d'); k.fillStyle = '#8d939c'; k.font = '20px sans-serif'; k.textAlign = 'center'; k.fillText('Upload a road image or load a sample to begin', 400, 240) }, 0);
+        (function () {
+            const c = $('#cvD'), x = c.getContext('2d'); const tmp = $('#cv'); let s = 7; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+            let g = x.createLinearGradient(0, 0, 0, 170); g.addColorStop(0, '#7c8fa3'); g.addColorStop(1, '#b4bcc4'); x.fillStyle = g; x.fillRect(0, 0, 800, 170); x.fillStyle = '#5b5f65'; x.fillRect(0, 170, 800, 310);
+            for (let i = 0; i < 2500; i++) { const v = 70 + r() * 40 | 0; x.fillStyle = `rgb(${v},${v + 2},${v + 5})`; x.fillRect(r() * 800, 170 + r() * 310, 2 + r() * 3, 2 + r() * 3) }
+            x.fillStyle = '#d8d4c0'; for (let i = 0; i < 5; i++) { const y = 190 + i * i * 14 + i * 20, w = 6 + i * 5; x.fillRect(400 - w / 2, y, w, 10 + i * 9) } x.fillStyle = '#8a8f55'; x.fillRect(0, 170, 60, 310); x.fillRect(740, 170, 60, 310);
+            [[250, 360, 95, 52], [560, 290, 58, 30]].forEach(p => { x.fillStyle = '#8b8f94'; x.beginPath(); x.ellipse(p[0], p[1], p[2] + 7, p[3] + 5, 0, 0, 7); x.fill(); x.fillStyle = '#17181a'; x.beginPath(); x.ellipse(p[0], p[1], p[2], p[3], 0, 0, 7); x.fill() });
+            const d = detect(c); cur.gps = ['13.0827', '80.2707']; drawDets(c, d, 1); if (d[0]) setDash(d[0]); else $('#dashInfo').innerHTML = '<div class="clear">✓ ROAD CLEAR</div>'
+        })();
+    </script>
+</body>
+
+</html>
